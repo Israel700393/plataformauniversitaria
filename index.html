@@ -206,12 +206,44 @@
       color: #3a86ff;
       border-bottom: #ff6d00;
     }
+    /* Botão básico */
+#theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 2rem;
+  transition: transform 0.4s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Animação de giro */
+#theme-toggle.rotate {
+  transform: rotate(360deg);
+}
+
+/* Estilo do ícone */
+#theme-toggle .icon {
+  display: inline-block;
+  transition: transform 0.4s ease, opacity 0.4s ease;
+}
+
+/* Tema escuro no body */
+body.dark {
+  background-color: #121212;
+  color: #f0f0f0;
+}
+
   </style>
 </head>
 <body>
   <header>
     <h1>Espaço Universitário 📚 </h1>
-    <button id="theme-toggle"><i class="fas fa-adjust"></i></button>
+    <button id="theme-toggle" aria-label="Alternar tema">
+  <span class="icon">🌞</span>
+</button>
+
   </header>
 
   <main>
@@ -424,16 +456,37 @@
       });
     });
 
-    // === Tema Dark/Light ===
-    const themeToggle=document.getElementById("theme-toggle");
-    function applyTheme(theme){document.body.classList.toggle("dark",theme==="dark");}
-    function saveTheme(theme){localStorage.setItem("theme",theme);}
-    function loadTheme(){applyTheme(localStorage.getItem("theme")||"light");}
-    themeToggle.addEventListener("click",()=>{
-      let theme=document.body.classList.contains("dark")?"light":"dark";
-      applyTheme(theme);saveTheme(theme);
-    });
-    loadTheme();
+// === Tema Dark/Light com ícone animado ===
+const themeToggle = document.getElementById("theme-toggle");
+const icon = themeToggle.querySelector(".icon");
+
+function applyTheme(theme) {
+  document.body.classList.toggle("dark", theme === "dark");
+  icon.textContent = theme === "dark" ? "🌙" : "🌞";
+}
+
+function saveTheme(theme) {
+  localStorage.setItem("theme", theme);
+}
+
+function loadTheme() {
+  const theme = localStorage.getItem("theme") || "light";
+  applyTheme(theme);
+}
+
+themeToggle.addEventListener("click", () => {
+  let theme = document.body.classList.contains("dark") ? "light" : "dark";
+  
+  // Adiciona rotação no clique
+  themeToggle.classList.add("rotate");
+  setTimeout(() => themeToggle.classList.remove("rotate"), 400);
+
+  applyTheme(theme);
+  saveTheme(theme);
+});
+
+loadTheme();
+
 
     // === Salvar tempo pomodoro ===
     function saveData(){localStorage.setItem("timeLeft",timeLeft);}
