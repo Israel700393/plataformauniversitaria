@@ -4,246 +4,85 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Plataforma de Estudos Universitário</title>
-  <!-- Fontes & Ícones -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/2d9e3e1a2f.js" crossorigin="anonymous"></script>
   <style>
-    * {margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-    body {
-      background:var(--bg);
-      color:var(--text);
-      transition:background 0.5s, color 0.5s;
-      overflow-x:hidden;
+    *{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+    body{background:var(--bg);color:var(--text);transition:.5s;overflow-x:hidden;}
+    :root{
+      --bg:#f4f6f9;--text:#222;--card:rgba(255,255,255,0.75);--accent:#3a86ff;
+      --bg-dark:#121212;--text-dark:#f4f6f9;--card-dark:rgba(30,30,30,0.75);--accent-dark:#ff6d00;
     }
+    body.dark{--bg:var(--bg-dark);--text:var(--text-dark);--card:var(--card-dark);--accent:var(--accent-dark);}
 
-    :root {
-      --bg:#f4f6f9;
-      --text:#222;
-      --card:rgba(255,255,255,0.75);
-      --accent:#3a86ff;
-      --bg-dark:#121212;
-      --text-dark:#f4f6f9;
-      --card-dark:rgba(30,30,30,0.75);
-      --accent-dark:#ff6d00;
-    }
-    body.dark {
-      --bg:var(--bg-dark);
-      --text:var(--text-dark);
-      --card:var(--card-dark);
-      --accent:var(--accent-dark);
-    }
+    header{display:flex;justify-content:space-between;align-items:center;padding:15px 30px;position:sticky;top:0;z-index:1000;background:rgba(255,255,255,0.08);backdrop-filter:blur(12px);box-shadow:0 4px 10px rgba(0,0,0,0.1);}
+    header h1{font-size:1.4rem;font-weight:600;color:var(--accent);}
+    header button{background:none;border:none;color:var(--text);font-size:1.5rem;cursor:pointer;transition:0.3s;}
+    header button:hover{color:var(--accent);transform:rotate(20deg);}
 
-    /* Header */
-    header {
-      display:flex;justify-content:space-between;align-items:center;
-      padding:15px 30px;position:sticky;top:0;z-index:1000;
-      background:rgba(255,255,255,0.08);backdrop-filter:blur(12px);
-      box-shadow:0 4px 10px rgba(0,0,0,0.1);
-    }
-    header h1 {
-      font-size:1.4rem;font-weight:600;color:var(--accent);
-      letter-spacing:1px;
-    }
-    header button {
-      background:none;border:none;color:var(--text);
-      font-size:1.5rem;cursor:pointer;transition:0.3s;
-    }
-    header button:hover {color:var(--accent);transform:rotate(20deg);}
+    main{padding:20px;display:grid;gap:30px;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));}
 
-    /* Main grid */
-    main {
-      padding:20px;
-      display:grid;
-      gap:30px;
-      grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
-    }
+    section{background:var(--card);padding:20px;border-radius:18px;box-shadow:0 8px 24px rgba(0,0,0,0.08);transition:0.3s ease;backdrop-filter:blur(14px);}
+    section:hover{transform:translateY(-6px) scale(1.01);}
+    h2{margin-bottom:12px;font-size:1.2rem;color:var(--accent);}
 
-    /* Seções com efeito glass */
-    section {
-      background:var(--card);
-      padding:20px;border-radius:18px;
-      box-shadow:0 8px 24px rgba(0,0,0,0.08);
-      transition:0.3s ease;
-      backdrop-filter:blur(14px);
-      animation:fadeUp 0.8s ease forwards;
-      opacity:0;
-    }
-    section:hover {transform:translateY(-6px) scale(1.01);}
-    h2 {margin-bottom:12px;font-size:1.2rem;color:var(--accent);}
-
-    @keyframes fadeUp {
-      from {opacity:0;transform:translateY(30px);}
-      to {opacity:1;transform:translateY(0);}
-    }
-
-    /* Relógio */
-    #clock {font-size:2rem;font-weight:600;text-align:center;}
-
-    /* Botões gerais */
-    button {
-      padding:8px 16px;
-      border:none;border-radius:10px;
-      background:#ff6d00;
-      color:#3281ff;font-weight:600;
-      cursor:pointer;transition:0.3s;
-      box-shadow:0 4px 12px rgba(0,0,0,0.15);
-    }
-    button:hover {transform:scale(1.05);box-shadow:0 6px 18px rgba(0,0,0,0.25);color: #f78a37;background: #7dafff;}
-    button:active {transform:scale(0.95);}
-
-    /* Cronômetro */
+    #clock{text-align:center;font-size:2rem;font-weight:600;}
     #timer {display:flex;flex-direction:column;align-items:center;}
     #timer-display {font-size:2rem;margin-bottom:10px;font-weight:600;}
 
-    /* Tabs */
-    .tabs {display:flex;gap:10px;margin-bottom:10px;}
-    .tabs button {
-      flex:1;background:#ccc;color:#333;
-      border-radius:8px;font-weight:500;
-    }
-    .tabs button.active {background:var(--accent);color:#fff;}
+    input, textarea{width:100%;padding:8px;border-radius:10px;border:1px solid #ccc;margin-bottom:8px;}
+    button{padding:8px 16px;border:none;border-radius:10px;background:var(--accent);color:#fff;font-weight:600;cursor:pointer;transition:0.3s;}
+    button:hover{transform:scale(1.05);background:#ff6d00;}
 
-    .tab-content {display:none;}
-    .tab-content.active {display:block;animation:fadeIn 0.5s ease;}
-    @keyframes fadeIn {from{opacity:0;}to{opacity:1;}}
+    .tabs{display:flex;gap:10px;margin-bottom:10px;}
+    .tabs button{flex:1;background:#ccc;color:#333;border-radius:8px;font-weight:500;}
+    .tabs button.active{background:var(--accent);color:#fff;}
+    .tab-content{display:none;}
+    .tab-content.active{display:block;}
 
-    /* Notas */
-    #notes-area {
-      width:100%;height:150px;padding:10px;
-      border:1px solid #ccc;border-radius:12px;
-      background:rgba(255,255,255,0.6);
-    }
+    .flashcard-container{display:flex;flex-wrap:wrap;gap:15px;}
+    .flashcard{width:160px;height:110px;perspective:1000px;cursor:pointer;}
+    .flashcard-inner{position:relative;width:100%;height:100%;transition:transform 0.6s;transform-style:preserve-3d;}
+    .flashcard.flipped .flashcard-inner{transform:rotateY(180deg);}
+    .flashcard-front,.flashcard-back{position:absolute;width:100%;height:100%;border-radius:12px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,var(--accent),#6ec1ff);color:#fff;font-weight:600;backface-visibility:hidden;box-shadow:0 4px 10px rgba(0,0,0,0.2);}
+    .flashcard-back{transform:rotateY(180deg);}
 
-    /* Flashcards */
-    .flashcard-container {display:flex;flex-wrap:wrap;gap:15px;}
-    .flashcard {width:160px;height:110px;perspective:1000px;cursor:pointer;}
-    .flashcard-inner {
-      position:relative;width:100%;height:100%;
-      transition:transform 0.6s;transform-style:preserve-3d;
-    }
-    .flashcard.flipped .flashcard-inner {transform:rotateY(180deg);}
-    .flashcard-front,.flashcard-back {
-      position:absolute;width:100%;height:100%;
-      border-radius:12px;
-      display:flex;align-items:center;justify-content:center;
-      background:linear-gradient(135deg,var(--accent),#6ec1ff);
-      color:#fff;font-weight:600;
-      backface-visibility:hidden;
-      box-shadow:0 4px 10px rgba(0,0,0,0.2);
-    }
-    .flashcard-back {transform:rotateY(180deg);}
+    ul.tasks{list-style:none;}
+    ul.tasks li{margin:8px 0;padding:6px 10px;border-radius:8px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:space-between;transition:0.3s;}
+    ul.tasks li:hover{background:rgba(0,0,0,0.1);}
+    ul.tasks input{margin-right:8px;}
 
-    /* Tarefas */
-    ul.tasks {list-style:none;}
-    ul.tasks li {
-      margin:8px 0;padding:6px 10px;
-      border-radius:8px;background:rgba(255,255,255,0.2);
-      display:flex;align-items:center;justify-content:space-between;
-      transition:0.3s;
-    }
-    ul.tasks li:hover {background:rgba(0,0,0,0.1);}
-    ul.tasks input {margin-right:8px;}
+    #calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center;}
+    #calendar div{padding:10px;background:var(--card);border-radius:8px;transition:.3s;cursor:pointer;}
+    #calendar div:hover{background:var(--accent);color:#fff;transform:scale(1.1);}
+    .has-reminder{border:2px solid var(--accent);}
 
-    /* Carrossel */
-    .carousel {display:flex;gap:20px;overflow-x:auto;scroll-behavior:smooth;perspective:1000px;}
-    .carousel::-webkit-scrollbar{display:none;}
-    .carousel-item {
-      flex:0 0 220px;height:140px;
-      background:linear-gradient(135deg,var(--accent),#6ec1ff);
-      color:#fff;border-radius:14px;
-      display:flex;align-items:center;justify-content:center;
-      font-size:1.1rem;transform:rotateY(12deg);
-      transition:0.5s;box-shadow:0 6px 16px rgba(0,0,0,0.2);
-    }
-    .carousel-item:hover {transform:rotateY(0deg) scale(1.07);}
+    .footer-carousel{display:flex;gap:15px;overflow-x:auto;scroll-behavior:smooth;margin-top:20px;}
+    .footer-carousel::-webkit-scrollbar{display:none;}
+    .footer-item{flex:0 0 220px;background:linear-gradient(135deg,var(--accent),#6ec1ff);color:#fff;padding:12px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.3);}
 
-    /* Cards estudo */
-    .study-cards {display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;}
-    .study-card {
-      background:linear-gradient(135deg,var(--accent),#6ec1ff);
-      color:#fff;padding:15px;border-radius:12px;
-      cursor:pointer;transition:0.4s;
-      box-shadow:0 4px 12px rgba(0,0,0,0.2);
-    }
-    .study-card.expanded {grid-column:span 2;background:var(--card);color:var(--text);}
+    .study-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:15px;}
+    .study-card{background:linear-gradient(135deg,var(--accent),#6ec1ff);color:#fff;padding:15px;border-radius:12px;cursor:pointer;transition:0.4s;box-shadow:0 4px 12px rgba(0,0,0,0.2);}
+    .study-card.expanded{grid-column:span 2;background:var(--card);color:var(--text);}
 
-    /* Calendário */
-    #calendar {display:grid;grid-template-columns:repeat(7,1fr);gap:6px;text-align:center;}
-    #calendar div {padding:10px;background:var(--card);border-radius:8px;transition:0.3s;}
-    #calendar div:hover {background:var(--accent);color:#fff;transform:scale(1.1);}
+    @media(max-width:768px){main{grid-template-columns:1fr;}}
 
-    /* Upload */
-    #file-input {margin-top:10px;}
-
-    /* Pesquisa */
-    #search-input {
-      width:100%;padding:10px;border-radius:10px;
-      border:1px solid #ccc;margin-bottom:10px;
-    }
-
-    /* Perfil */
-    .profile {display:flex;flex-direction:column;gap:6px;}
-    .profile a {color:var(--accent);text-decoration:none;transition:0.3s;}
-    .profile a:hover {text-decoration:underline;}
-
-    /* Responsivo */
-    @media(max-width:768px){
-      main {grid-template-columns:1fr;}
-    }
+    #theme-toggle{background:none;border:none;cursor:pointer;font-size:2rem;transition:transform .4s ease;}
+    #theme-toggle.rotate{transform:rotate(360deg);}
+    #theme-toggle .icon{transition:.4s;}
     a {
-      color: #ff6d00;
-      text-transform: var(--accent);
+     color: #ff6d00;
     }
     a:hover {
       color: #3a86ff;
       transition: 0.5s;
     }
-    .bottom{
-     color: #ff6d00;
-    border-bottom: #3a86ff; 
-    }
-    .bottom:hover{
-      color: #3a86ff;
-      border-bottom: #ff6d00;
-    }
-    /* Botão básico */
-#theme-toggle {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 2rem;
-  transition: transform 0.4s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Animação de giro */
-#theme-toggle.rotate {
-  transform: rotate(360deg);
-}
-
-/* Estilo do ícone */
-#theme-toggle .icon {
-  display: inline-block;
-  transition: transform 0.4s ease, opacity 0.4s ease;
-}
-
-/* Tema escuro no body */
-body.dark {
-  background-color: #121212;
-  color: #f0f0f0;
-}
-
   </style>
 </head>
 <body>
   <header>
-    <h1>Espaço Universitário 📚 </h1>
-    <button id="theme-toggle" aria-label="Alternar tema">
-  <span class="icon">🌞</span>
-</button>
-
+    <h1>Espaço Universitário 📚</h1>
+    <button id="theme-toggle"><span class="icon">🌞</span></button>
   </header>
 
   <main>
@@ -267,12 +106,12 @@ body.dark {
     <section>
       <h2>Matérias</h2>
       <div class="tabs">
-        <button id="bottom" class="active" onclick="openTab(event,'med')">Medicina</button>
-        <button id="bottom" onclick="openTab(event,'enf')">Enfermagem</button>
+        <button class="active" onclick="openTab(event,'med')">Medicina</button>
+        <button onclick="openTab(event,'enf')">Enfermagem</button>
       </div>
-      <div id="med" class="tab-content active"><a href="https://www.youtube.com/MedicinaResumida" target="_blank" >Conteúdos de Medicina...</a></div>
+      <div id="med" class="tab-content active"><a href="https://www.youtube.com/MedicinaResumida" target="_blank">Conteúdos de Medicina...</a></div>
       <div id="enf" class="tab-content"><a href="https://www.youtube.com/PráticaEnfermagem" target="_blank">Conteúdos de Enfermagem...</a></div>
-        </section>
+    </section>
 
     <section>
       <h2>Anotações</h2>
@@ -294,17 +133,16 @@ body.dark {
     </section>
 
     <section>
-      <h2>Calendário</h2>
+      <h2>Calendário com Lembretes</h2>
       <div id="calendar"></div>
     </section>
-
 
     <section>
       <h2>Cards de Estudo</h2>
       <div class="study-cards">
-        <div class="study-card" onclick="expandCard(this)">Resumo 1 </div>
-        <div class="study-card" onclick="expandCard(this)">Resumo 2 </div>
-        <div class="study-card" onclick="expandCard(this)">Resumo 3 </div>
+        <div class="study-card" onclick="expandCard(this)">Resumo 1</div>
+        <div class="study-card" onclick="expandCard(this)">Resumo 2</div>
+        <div class="study-card" onclick="expandCard(this)">Resumo 3</div>
       </div>
     </section>
 
@@ -321,36 +159,213 @@ body.dark {
     </section>
 
     <section>
-      <h2>  Suporte </h2>
+      <h2>Dev Suporte</h2>
       <div class="profile">
-        <span><strong>Nome:</strong> Israel Gabriel Rangel Peres</span>
-        <span><strong>Email:</strong><a href="https://gmail.com/israelrangel021223@gmail.com" target="_blank"> israelrangel021223@gmail.com</a></span>
-       <span><strong>Instagram:</strong><a href="https://Instagram.com/israe_lrangel0212" target="_blank">Instagram</a></span> 
-      <span><strong>Outro serviço educacional:</strong><a href="https://israel700393.github.io/DiNoWeB-/" target="_blank">Serviços educacionais</a></span>  
-      </div>
+        <ul>
+        <li><span><strong>Nome:</strong> Israel Gabriel Rangel Peres</span></li>
+        <li><span><strong>Cursos:</strong> Cybersecurity / Programmer / Developer</span></li>
+        <li><span><strong>Email:</strong> <a href="mailto:israelrangel021223@gmail.com">israelrangel021223@gmail.com</a></span></li>
+        <li><span><strong> Instagram:</strong><a href="https://Instagram.com/israe_lrangel0212" target="_blank"> israe_lrangel0212</a></span></li>
+      <li><span><strong> Email:</strong><a href="https://israel700393.github.io/DiNoWeB-/" target="_blank">Serviços educacionais</a></span>  </li>
+    </ul>  
+    </div>
     </section>
   </main>
 
+  <footer>
+  <h2 style="color:var(--accent);margin-bottom:8px;">📌 Lembretes & Tarefas</h2>
+  <div class="footer-carousel-wrapper">
+    <button class="carousel-btn left" onclick="scrollCarousel(-1)">&#10094;</button>
+    <div class="footer-carousel" id="footer-carousel"></div>
+    <button class="carousel-btn right" onclick="scrollCarousel(1)">&#10095;</button>
+  </div>
+  <div class="carousel-dots" id="carousel-dots"></div>
+</footer>
+
+<style>
+.footer-carousel-wrapper{
+  position: relative;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  width: 100%;
+}
+.footer-carousel{
+  display: flex;
+  gap: 15px;
+  overflow-x: scroll;
+  scroll-behavior: smooth;
+  padding: 10px 0;
+  scrollbar-width: none; /* Firefox */
+}
+.footer-carousel::-webkit-scrollbar{display:none;} /* Chrome, Safari */
+
+.footer-item{
+  flex: 0 0 220px;
+  background: linear-gradient(135deg,var(--accent),#6ec1ff);
+  color: #fff;
+  padding: 12px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  min-width: 220px;
+  transition: transform 0.3s;
+}
+.footer-item:hover{
+  transform: scale(1.05);
+}
+
+.carousel-btn{
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  background: rgba(0,0,0,0.3);
+  border: none;
+  color: #fff;
+  font-size: 1.8rem;
+  cursor: pointer;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s;
+}
+.carousel-btn:hover{
+  background: rgba(0,0,0,0.6);
+}
+.carousel-btn.left{left: 5px;}
+.carousel-btn.right{right: 5px;}
+
+.carousel-dots{
+  display:flex;
+  justify-content:center;
+  margin-top:10px;
+  gap:6px;
+}
+.carousel-dot{
+  width:10px;height:10px;border-radius:50%;background:#ccc;cursor:pointer;transition:0.3s;
+}
+.carousel-dot.active{
+  background:var(--accent);
+}
+
+@media(max-width:768px){
+  .footer-item{flex: 0 0 180px; min-width:180px;}
+}
+</style>
+
+<script>
+const carousel = document.getElementById("footer-carousel");
+const dotsContainer = document.getElementById("carousel-dots");
+let autoScrollInterval;
+let scrollAmount = 240; // pixels por clique
+
+function renderFooter(){
+  carousel.innerHTML="";
+  let items = [];
+
+  // Lembretes
+  for(let d in reminders){
+    let div = document.createElement("div");
+    div.className="footer-item";
+    div.textContent=`Dia ${d}: ${reminders[d]}`;
+    items.push(div);
+  }
+  // Tarefas
+  let tasks=JSON.parse(localStorage.getItem("tasks")||"[]");
+  tasks.forEach(t=>{
+    let div=document.createElement("div"); div.className="footer-item";
+    div.textContent=`Tarefa: ${t.text} [${t.done?"✔":"✖"}]`;
+    items.push(div);
+  });
+
+  // Render e duplicação para loop infinito
+  items.forEach(i=>carousel.appendChild(i.cloneNode(true)));
+  items.forEach(i=>carousel.appendChild(i.cloneNode(true)));
+
+  createDots(items.length);
+  startAutoScroll();
+}
+
+function createDots(count){
+  dotsContainer.innerHTML="";
+  for(let i=0;i<count;i++){
+    let dot=document.createElement("div");
+    dot.className="carousel-dot";
+    if(i===0) dot.classList.add("active");
+    dot.addEventListener("click",()=>scrollToIndex(i));
+    dotsContainer.appendChild(dot);
+  }
+}
+
+function updateDots(){
+  let scrollIndex = Math.round(carousel.scrollLeft / scrollAmount) % (dotsContainer.children.length);
+  Array.from(dotsContainer.children).forEach((d,i)=>d.classList.toggle("active",i===scrollIndex));
+}
+
+function scrollCarousel(direction){
+  carousel.scrollBy({left: direction*scrollAmount, behavior:'smooth'});
+  resetAutoScroll();
+}
+
+function scrollToIndex(index){
+  carousel.scrollTo({left:index*scrollAmount, behavior:'smooth'});
+  resetAutoScroll();
+}
+
+function startAutoScroll(){
+  stopAutoScroll();
+  autoScrollInterval = setInterval(()=>{
+    carousel.scrollBy({left: scrollAmount, behavior:'smooth'});
+  },3000);
+}
+
+function stopAutoScroll(){
+  if(autoScrollInterval) clearInterval(autoScrollInterval);
+}
+
+function resetAutoScroll(){
+  stopAutoScroll();
+  startAutoScroll();
+}
+
+// Atualiza dots em scroll
+carousel.addEventListener("scroll",()=>updateDots());
+
+renderFooter();
+</script>
+
+
+
   <script>
+    // === Tema ===
+    const themeToggle=document.getElementById("theme-toggle");
+    const icon=themeToggle.querySelector(".icon");
+    function applyTheme(theme){document.body.classList.toggle("dark",theme==="dark");icon.textContent=theme==="dark"?"🌙":"🌞";}
+    function saveTheme(theme){localStorage.setItem("theme",theme);}
+    function loadTheme(){const t=localStorage.getItem("theme")||"light";applyTheme(t);}
+    themeToggle.addEventListener("click",()=>{
+      let t=document.body.classList.contains("dark")?"light":"dark";
+      themeToggle.classList.add("rotate");
+      setTimeout(()=>themeToggle.classList.remove("rotate"),400);
+      applyTheme(t);saveTheme(t);
+    });
+    loadTheme();
+
     // === Relógio ===
-    function updateClock(){
-      document.getElementById('clock').textContent=new Date().toLocaleTimeString();
-    }
+    function updateClock(){document.getElementById('clock').textContent=new Date().toLocaleTimeString();}
     setInterval(updateClock,1000);updateClock();
 
     // === Timer Pomodoro ===
-    let timer;let timeLeft=1500;
-    function updateTimer(){
-      let m=Math.floor(timeLeft/60);let s=timeLeft%60;
-      document.getElementById("timer-display").textContent=`${m}:${s<10?"0":""}${s}`;
-    }
-    function startTimer(){
-      if(!timer) timer=setInterval(()=>{
-        if(timeLeft>0){timeLeft--;updateTimer();saveData();}
-      },1000);
-    }
+    let timer; let timeLeft=1500;
+    function updateTimer(){let m=Math.floor(timeLeft/60); let s=timeLeft%60; document.getElementById("timer-display").textContent=`${m}:${s<10?"0":""}${s}`;}
+    function startTimer(){if(!timer) timer=setInterval(()=>{if(timeLeft>0){timeLeft--;updateTimer();saveData();}},1000);}
     function pauseTimer(){clearInterval(timer);timer=null;}
     function resetTimer(){pauseTimer();timeLeft=1500;updateTimer();saveData();}
+    function saveData(){localStorage.setItem("timeLeft",timeLeft);}
+    if(localStorage.getItem("timeLeft")){timeLeft=parseInt(localStorage.getItem("timeLeft"));updateTimer();}
 
     // === Tabs matérias ===
     function openTab(evt,tabName){
@@ -361,33 +376,20 @@ body.dark {
     }
 
     // === Notas ===
-    function saveNotes(){
-      localStorage.setItem("notes",document.getElementById("notes-area").value);
-    }
+    function saveNotes(){localStorage.setItem("notes",document.getElementById("notes-area").value);}
     document.getElementById("notes-area").value=localStorage.getItem("notes")||"";
 
     // === Flashcards ===
     function addFlashcard(){
-      let q=prompt("Frente do cartão:");
-      let a=prompt("Verso do cartão:");
-      if(q&&a){
-        let card={q,a};
-        let flashcards=JSON.parse(localStorage.getItem("flashcards")||"[]");
-        flashcards.push(card);
-        localStorage.setItem("flashcards",JSON.stringify(flashcards));
-        renderFlashcards();
-      }
+      let q=prompt("Frente do cartão:"), a=prompt("Verso do cartão:");
+      if(q&&a){let card={q,a}; let flashcards=JSON.parse(localStorage.getItem("flashcards")||"[]"); flashcards.push(card); localStorage.setItem("flashcards",JSON.stringify(flashcards)); renderFlashcards();}
     }
     function renderFlashcards(){
-      let container=document.getElementById("flashcards");container.innerHTML="";
+      let container=document.getElementById("flashcards"); container.innerHTML="";
       let flashcards=JSON.parse(localStorage.getItem("flashcards")||"[]");
-      flashcards.forEach((c,i)=>{
-        let card=document.createElement("div");
-        card.className="flashcard";
-        card.innerHTML=`<div class="flashcard-inner">
-                          <div class="flashcard-front">${c.q}</div>
-                          <div class="flashcard-back">${c.a}</div>
-                        </div>`;
+      flashcards.forEach(c=>{
+        let card=document.createElement("div"); card.className="flashcard";
+        card.innerHTML=`<div class="flashcard-inner"><div class="flashcard-front">${c.q}</div><div class="flashcard-back">${c.a}</div></div>`;
         card.onclick=()=>card.classList.toggle("flipped");
         container.appendChild(card);
       });
@@ -402,17 +404,17 @@ body.dark {
         tasks.push({text:input.value,done:false});
         localStorage.setItem("tasks",JSON.stringify(tasks));
         input.value="";
-        renderTasks();
+        renderTasks(); renderFooter();
       }
     }
     function toggleTask(i){
       let tasks=JSON.parse(localStorage.getItem("tasks")||"[]");
       tasks[i].done=!tasks[i].done;
       localStorage.setItem("tasks",JSON.stringify(tasks));
-      renderTasks();
+      renderTasks(); renderFooter();
     }
     function renderTasks(){
-      let list=document.getElementById("task-list");list.innerHTML="";
+      let list=document.getElementById("task-list"); list.innerHTML="";
       let tasks=JSON.parse(localStorage.getItem("tasks")||"[]");
       tasks.forEach((t,i)=>{
         let li=document.createElement("li");
@@ -422,74 +424,64 @@ body.dark {
     }
     renderTasks();
 
-    // === Calendário ===
+    // === Calendário com lembretes ===
+    let reminders=JSON.parse(localStorage.getItem("reminders")||"{}");
     function loadCalendar(){
-      let cal=document.getElementById("calendar");cal.innerHTML="";
+      let cal=document.getElementById("calendar"); cal.innerHTML="";
       let days=["D","S","T","Q","Q","S","S"];
-      days.forEach(d=>{let el=document.createElement("div");el.textContent=d;el.style.fontWeight="600";cal.appendChild(el);});
+      days.forEach(d=>{let el=document.createElement("div"); el.textContent=d; el.style.fontWeight="600"; cal.appendChild(el);});
       for(let i=1;i<=30;i++){
-        let el=document.createElement("div");el.textContent=i;cal.appendChild(el);
+        let el=document.createElement("div"); el.textContent=i;
+        if(reminders[i]) el.classList.add("has-reminder");
+        el.onclick=()=>addReminder(i);
+        cal.appendChild(el);
       }
-    } loadCalendar();
+    }
+    function addReminder(day){
+      let text=prompt("Adicionar lembrete/comentário para dia "+day+":",reminders[day]||"");
+      if(text!==null){
+        if(text.trim()!=="") reminders[day]=text; else delete reminders[day];
+        localStorage.setItem("reminders",JSON.stringify(reminders));
+        loadCalendar(); renderFooter();
+      }
+    }
+    loadCalendar();
 
-    // === Cards de estudo ===
+    // === Cards estudo ===
     function expandCard(el){el.classList.toggle("expanded");}
 
     // === Upload arquivos ===
     document.getElementById("file-input").addEventListener("change",function(){
-      let list=document.getElementById("file-list");list.innerHTML="";
-      [...this.files].forEach(f=>{
-        let li=document.createElement("li");li.textContent=f.name;list.appendChild(li);
-      });
+      let list=document.getElementById("file-list"); list.innerHTML="";
+      [...this.files].forEach(f=>{let li=document.createElement("li"); li.textContent=f.name; list.appendChild(li);});
     });
 
     // === Pesquisa interna ===
     document.getElementById("search-input").addEventListener("input",function(){
       let q=this.value.toLowerCase();
-      let res=document.getElementById("search-results");res.innerHTML="";
+      let res=document.getElementById("search-results"); res.innerHTML="";
       document.querySelectorAll("section").forEach(sec=>{
         if(sec.textContent.toLowerCase().includes(q)&&q!==""){
-          let li=document.createElement("li");li.textContent=sec.querySelector("h2")?.textContent;
+          let li=document.createElement("li"); li.textContent=sec.querySelector("h2")?.textContent;
           res.appendChild(li);
         }
       });
     });
 
-// === Tema Dark/Light com ícone animado ===
-const themeToggle = document.getElementById("theme-toggle");
-const icon = themeToggle.querySelector(".icon");
-
-function applyTheme(theme) {
-  document.body.classList.toggle("dark", theme === "dark");
-  icon.textContent = theme === "dark" ? "🌙" : "🌞";
-}
-
-function saveTheme(theme) {
-  localStorage.setItem("theme", theme);
-}
-
-function loadTheme() {
-  const theme = localStorage.getItem("theme") || "light";
-  applyTheme(theme);
-}
-
-themeToggle.addEventListener("click", () => {
-  let theme = document.body.classList.contains("dark") ? "light" : "dark";
-  
-  // Adiciona rotação no clique
-  themeToggle.classList.add("rotate");
-  setTimeout(() => themeToggle.classList.remove("rotate"), 400);
-
-  applyTheme(theme);
-  saveTheme(theme);
-});
-
-loadTheme();
-
-
-    // === Salvar tempo pomodoro ===
-    function saveData(){localStorage.setItem("timeLeft",timeLeft);}
-    if(localStorage.getItem("timeLeft")){timeLeft=parseInt(localStorage.getItem("timeLeft"));updateTimer();}
+    // === Carrossel rodapé ===
+    function renderFooter(){
+      let footer=document.getElementById("footer-carousel"); footer.innerHTML="";
+      // lembretes
+      for(let d in reminders){
+        let div=document.createElement("div"); div.className="footer-item"; div.textContent=`Dia ${d}: ${reminders[d]}`; footer.appendChild(div);
+      }
+      // tarefas
+      let tasks=JSON.parse(localStorage.getItem("tasks")||"[]");
+      tasks.forEach(t=>{
+        let div=document.createElement("div"); div.className="footer-item"; div.textContent=`Tarefa: ${t.text} [${t.done?"✔":"✖"}]`; footer.appendChild(div);
+      });
+    }
+    renderFooter();
   </script>
 </body>
 </html>
