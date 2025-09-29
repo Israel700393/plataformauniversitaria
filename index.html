@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Plataforma de Estudos da gabriela</title>
+  <title>Plataforma de Estudos da Gabriela</title>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <script src="https://kit.fontawesome.com/2d9e3e1a2f.js" crossorigin="anonymous"></script>
   <style>
@@ -133,7 +133,7 @@
     </section>
 
     <section>
-      <h2>Calendário (adicione seu lembrete)</h2>
+      <h2>Calendário com Lembretes</h2>
       <div id="calendar"></div>
     </section>
 
@@ -171,18 +171,23 @@
     </div>
     </section>
   </main>
-
-  <footer>
-  <h2 style="color:var(--accent);margin-bottom:8px;">📌 Lembretes & Tarefas</h2>
+<section>
+  <h2>📌 Lembretes & Tarefas</h2>
   <div class="footer-carousel-wrapper">
     <button class="carousel-btn left" onclick="scrollCarousel(-1)">&#10094;</button>
     <div class="footer-carousel" id="footer-carousel"></div>
     <button class="carousel-btn right" onclick="scrollCarousel(1)">&#10095;</button>
   </div>
   <div class="carousel-dots" id="carousel-dots"></div>
-</footer>
+</section>
 
 <style>
+section h2 {
+  color: var(--accent);
+  margin-bottom: 15px;
+}
+
+/* Carousel */
 .footer-carousel-wrapper{
   position: relative;
   display: flex;
@@ -193,25 +198,27 @@
 .footer-carousel{
   display: flex;
   gap: 15px;
-  overflow-x: scroll;
+  overflow-x: auto;
   scroll-behavior: smooth;
   padding: 10px 0;
-  scrollbar-width: none; /* Firefox */
 }
-.footer-carousel::-webkit-scrollbar{display:none;} /* Chrome, Safari */
+.footer-carousel::-webkit-scrollbar{display:none;}
 
 .footer-item{
   flex: 0 0 220px;
-  background: linear-gradient(135deg,var(--accent),#6ec1ff);
-  color: #fff;
-  padding: 12px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  min-width: 220px;
-  transition: transform 0.3s;
+  background: var(--card);
+  backdrop-filter: blur(12px);
+  color: var(--text);
+  padding: 15px;
+  border-radius: 18px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  transition: transform 0.3s, background 0.3s, color 0.3s;
+  cursor: pointer;
 }
 .footer-item:hover{
-  transform: scale(1.05);
+  transform: translateY(-4px) scale(1.03);
+  background: linear-gradient(135deg,var(--accent),#6ec1ff);
+  color: #fff;
 }
 
 .carousel-btn{
@@ -219,7 +226,7 @@
   top: 50%;
   transform: translateY(-50%);
   z-index: 10;
-  background: rgba(0,0,0,0.3);
+  background: rgba(0,0,0,0.25);
   border: none;
   color: #fff;
   font-size: 1.8rem;
@@ -233,38 +240,43 @@
   transition: 0.3s;
 }
 .carousel-btn:hover{
-  background: rgba(0,0,0,0.6);
+  background: rgba(0,0,0,0.5);
 }
-.carousel-btn.left{left: 5px;}
-.carousel-btn.right{right: 5px;}
+.carousel-btn.left{left:5px;}
+.carousel-btn.right{right:5px;}
 
 .carousel-dots{
   display:flex;
   justify-content:center;
-  margin-top:10px;
-  gap:6px;
+  margin-top:12px;
+  gap:8px;
 }
 .carousel-dot{
-  width:10px;height:10px;border-radius:50%;background:#ccc;cursor:pointer;transition:0.3s;
+  width:12px;
+  height:12px;
+  border-radius:50%;
+  background:#ccc;
+  cursor:pointer;
+  transition:0.3s;
 }
 .carousel-dot.active{
   background:var(--accent);
 }
 
 @media(max-width:768px){
-  .footer-item{flex: 0 0 180px; min-width:180px;}
+  .footer-item{flex: 0 0 180px;}
 }
 </style>
 
 <script>
 const carousel = document.getElementById("footer-carousel");
 const dotsContainer = document.getElementById("carousel-dots");
+let scrollAmount = 240;
 let autoScrollInterval;
-let scrollAmount = 240; // pixels por clique
 
 function renderFooter(){
   carousel.innerHTML="";
-  let items = [];
+  let items=[];
 
   // Lembretes
   for(let d in reminders){
@@ -273,19 +285,19 @@ function renderFooter(){
     div.textContent=`Dia ${d}: ${reminders[d]}`;
     items.push(div);
   }
+
   // Tarefas
   let tasks=JSON.parse(localStorage.getItem("tasks")||"[]");
   tasks.forEach(t=>{
-    let div=document.createElement("div"); div.className="footer-item";
+    let div=document.createElement("div");
+    div.className="footer-item";
     div.textContent=`Tarefa: ${t.text} [${t.done?"✔":"✖"}]`;
     items.push(div);
   });
 
-  // Render e duplicação para loop infinito
-  items.forEach(i=>carousel.appendChild(i.cloneNode(true)));
-  items.forEach(i=>carousel.appendChild(i.cloneNode(true)));
-
+  items.forEach(i=>carousel.appendChild(i));
   createDots(items.length);
+  updateDots();
   startAutoScroll();
 }
 
@@ -294,15 +306,14 @@ function createDots(count){
   for(let i=0;i<count;i++){
     let dot=document.createElement("div");
     dot.className="carousel-dot";
-    if(i===0) dot.classList.add("active");
     dot.addEventListener("click",()=>scrollToIndex(i));
     dotsContainer.appendChild(dot);
   }
 }
 
 function updateDots(){
-  let scrollIndex = Math.round(carousel.scrollLeft / scrollAmount) % (dotsContainer.children.length);
-  Array.from(dotsContainer.children).forEach((d,i)=>d.classList.toggle("active",i===scrollIndex));
+  let index=Math.round(carousel.scrollLeft / scrollAmount);
+  Array.from(dotsContainer.children).forEach((d,i)=>d.classList.toggle("active",i===index));
 }
 
 function scrollCarousel(direction){
@@ -315,29 +326,18 @@ function scrollToIndex(index){
   resetAutoScroll();
 }
 
+// Auto scroll
 function startAutoScroll(){
   stopAutoScroll();
-  autoScrollInterval = setInterval(()=>{
-    carousel.scrollBy({left: scrollAmount, behavior:'smooth'});
-  },3000);
+  autoScrollInterval = setInterval(()=>{carousel.scrollBy({left: scrollAmount, behavior:'smooth'});}, 4000);
 }
+function stopAutoScroll(){if(autoScrollInterval) clearInterval(autoScrollInterval);}
+function resetAutoScroll(){stopAutoScroll(); startAutoScroll();}
 
-function stopAutoScroll(){
-  if(autoScrollInterval) clearInterval(autoScrollInterval);
-}
-
-function resetAutoScroll(){
-  stopAutoScroll();
-  startAutoScroll();
-}
-
-// Atualiza dots em scroll
 carousel.addEventListener("scroll",()=>updateDots());
 
 renderFooter();
 </script>
-
-
 
   <script>
     // === Tema ===
